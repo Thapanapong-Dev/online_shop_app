@@ -1,8 +1,8 @@
 # online_shop_app
 
-Flutter version 3.13.8 channel stable
-Dart SDK version: 3.1.4 (stable)
-An application for online shopping that uses notifierProvider and asyncNotifierProvider in riverpod to manage state.
+- Flutter version 3.13.8 channel stable
+- Dart SDK version: 3.1.4 (stable)
+- An application for online shopping that uses notifierProvider and asyncNotifierProvider in riverpod to manage state.
 
 ## Getting Started
 
