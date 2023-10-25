@@ -1,0 +1,283 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:online_shop_app/model/products.model.dart';
+import 'package:online_shop_app/routers.dart';
+import 'package:online_shop_app/shared/utils/colors.dart';
+import 'package:online_shop_app/shared/utils/text_styles.dart';
+import 'package:online_shop_app/shared/utils/utils.dart';
+import 'package:online_shop_app/shared/widgets/invalid_widget.dart';
+import 'package:online_shop_app/shared/widgets/loading_widget.dart';
+import 'package:online_shop_app/shared/widgets/product_quantity_widget.dart';
+import 'package:online_shop_app/view/product/product_view.dart';
+import 'package:online_shop_app/viewmodel/cart/cart_view_model.dart';
+import 'package:online_shop_app/viewmodel/cart/products_cart_view_model.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
+
+class CartView extends ConsumerStatefulWidget {
+  const CartView({super.key});
+
+  @override
+  ConsumerState<CartView> createState() => _SavedViewState();
+}
+
+class _SavedViewState extends ConsumerState<CartView> {
+  @override
+  Widget build(BuildContext context) {
+    final _products = ref.watch(productsCartViewModelProvider);
+
+    Widget _buildChekout() {
+      final totalPrice =
+          ref.watch(cartViewModelProvider.notifier).getTotalPrice();
+      return Container(
+        height: 7.h,
+        color: AppColors.lightOrange,
+        padding: EdgeInsets.symmetric(horizontal: 4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Total: ${Utils().priceFormatWithSymbol(totalPrice)}',
+              style: AppTextStyles.largeBoldTextStyle,
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, Routes.CHECKOUT),
+              child: Text('Checkout'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.white,
+                shadowColor: AppColors.grey,
+                elevation: 2,
+                foregroundColor: AppColors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                textStyle: AppTextStyles.sectionNameTextStyle,
+              ),
+            )
+          ],
+        ),
+      );
+    }
+
+    Widget _buildPlus(ProductItems product, int quantity) {
+      return Container(
+        margin: EdgeInsets.only(left: 4),
+        child: SizedBox.fromSize(
+          size: Size(5.h, 5.h),
+          child: ClipOval(
+            child: Material(
+              color: AppColors.lightOrange,
+              child: InkWell(
+                splashColor: AppColors.orange,
+                onTap: () {
+                  ref
+                      .read(cartViewModelProvider.notifier)
+                      .update(product: product, quantity: quantity + 1);
+                  setState(() {});
+                },
+                child: Icon(Icons.add),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget _buildMinus(ProductItems product, int quantity) {
+      return Container(
+        margin: EdgeInsets.only(left: 4),
+        child: SizedBox.fromSize(
+          size: Size(5.h, 5.h),
+          child: ClipOval(
+            child: Material(
+              color: AppColors.lightGrey,
+              child: InkWell(
+                splashColor: AppColors.orange,
+                onTap: () {
+                  ref
+                      .read(cartViewModelProvider.notifier)
+                      .update(product: product, quantity: quantity - 1);
+                  setState(() {});
+                },
+                child: Icon(Icons.remove),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget _buildQuantityOperation(
+        {required ProductItems product, required int quantity}) {
+      return Row(
+        children: [
+          quantity == 0 ? SizedBox() : _buildMinus(product, quantity),
+          ProductQuantity(quantity: quantity),
+          _buildPlus(product, quantity),
+        ],
+      );
+    }
+
+    Widget _buildProduct(ProductItems product) {
+      return Container(
+        padding: EdgeInsets.all(5),
+        margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: AppColors.white,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.grey,
+              blurRadius: 5,
+              offset: Offset(1, 1),
+            )
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 30.w,
+              height: 12.h,
+              child: GestureDetector(
+                onTap: () async {
+                  Navigator.pushNamed(
+                    context,
+                    Routes.PRODUCT,
+                    arguments: ProductArguments(product),
+                  ).then((_) => setState(() {}));
+                },
+                child: CachedNetworkImage(
+                  imageUrl: product.imageUrl!,
+                  placeholder: (context, url) => LoadingWidget().LoadingElement(
+                    size: 5.h,
+                    lineWidth: 5.h / 10,
+                  ),
+                  errorWidget: (context, url, error) =>
+                      InvalidWidget().imageNotFound(
+                    height: 4.h,
+                    fontSize: 4.h / 2.5,
+                  ),
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 4, left: 10),
+              width: 60.w,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${product.name}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                    style: AppTextStyles.mediumTextStyle,
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    '${Utils().priceFormatWithSymbol(product.price)}',
+                    overflow: TextOverflow.clip,
+                    softWrap: false,
+                    style: AppTextStyles.mediumBoldOrangeTextStyle,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Scaffold(
+      body: SafeArea(
+        bottom: false,
+        child: _products.isNotEmpty
+            ? SingleChildScrollView(
+                child: Column(
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _products.length,
+                      physics: BouncingScrollPhysics(),
+                      itemBuilder: (BuildContext context, int index) {
+                        final product = _products[index];
+                        final quantity = ref
+                            .watch(cartViewModelProvider.notifier)
+                            .getProductQuantity(product.id!);
+                        return Container(
+                          margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                          child: Slidable(
+                            child: Stack(
+                              children: [
+                                _buildProduct(product),
+                                Positioned(
+                                  right: 16,
+                                  bottom: 10,
+                                  child: _buildQuantityOperation(
+                                    product: product,
+                                    quantity: quantity,
+                                  ),
+                                )
+                              ],
+                            ),
+                            endActionPane: ActionPane(
+                              extentRatio: 0.2,
+                              motion: ScrollMotion(),
+                              children: [
+                                SlidableAction(
+                                  onPressed: (context) {
+                                    ref
+                                        .read(cartViewModelProvider.notifier)
+                                        .update(
+                                          product: _products[index],
+                                          quantity: 0,
+                                          isRemoveProductFromCart: true,
+                                        );
+                                    setState(() {});
+                                  },
+                                  icon: Icons.delete,
+                                  foregroundColor: AppColors.white,
+                                  backgroundColor: AppColors.red,
+                                  label: 'Delete',
+                                  autoClose: true,
+                                  spacing: 2,
+                                  borderRadius: BorderRadius.horizontal(
+                                      left: Radius.circular(10)),
+                                  padding: EdgeInsets.all(5),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              )
+            : Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.shopping_cart_rounded,
+                      color: AppColors.grey,
+                      size: 18.h,
+                    ),
+                    Text(
+                      'Shopping now!',
+                      style: AppTextStyles.mediumBoldDarkGreyTextStyle,
+                    ),
+                  ],
+                ),
+              ),
+      ),
+      bottomNavigationBar:
+          ref.watch(cartViewModelProvider).productsSelected!.isEmpty
+              ? SizedBox()
+              : _buildChekout(),
+    );
+  }
+}
