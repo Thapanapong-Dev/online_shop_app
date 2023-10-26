@@ -14,6 +14,7 @@ class CheckoutView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final _cart = ref.watch(cartViewModelProvider);
+    final _totalPrice = ref.watch(cartViewModelProvider.notifier).getTotalPrice();
 
     Widget _buildProductSummary() {
       return Scrollbar(
@@ -80,7 +81,7 @@ class CheckoutView extends ConsumerWidget {
               style: AppTextStyles.largeBoldTextStyle,
             ),
             Text(
-              '${Utils().priceFormatWithSymbol(ref.watch(cartViewModelProvider.notifier).getTotalPrice())}',
+              '${Utils().priceFormatWithSymbol(_totalPrice)}',
               style: AppTextStyles.largeBoldTextStyle,
             ),
           ],
@@ -90,8 +91,7 @@ class CheckoutView extends ConsumerWidget {
 
     Widget _buildQRCode() {
       return QrImageView(
-        data:
-            'https://payment-api.yimplatform.com/checkout?price=${_cart.totaPrice}',
+        data: 'https://payment-api.yimplatform.com/checkout?price=${_totalPrice}',
         version: QrVersions.auto,
         size: 60.w,
         eyeStyle: QrEyeStyle(
