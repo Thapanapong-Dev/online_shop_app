@@ -67,7 +67,7 @@ class RecommendElement extends ConsumerWidget {
       );
     }
 
-    return ref.watch(productsViewModelProvider).when(
+    return ref.watch(productsProvider).when(
           data: (products) {
             _products = products;
             return Column(

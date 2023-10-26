@@ -48,7 +48,7 @@ class RecommendView extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text('Recommendation')),
-      body: ref.watch(productsViewModelProvider).when(
+      body: ref.watch(productsProvider).when(
             data: (products) {
               _products = products;
               return SafeArea(

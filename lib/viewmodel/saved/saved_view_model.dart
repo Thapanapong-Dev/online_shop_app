@@ -5,29 +5,39 @@ import 'package:online_shop_app/shared/utils/constants.dart';
 part 'saved_view_model.g.dart';
 
 @Riverpod(keepAlive: true)
-class SavedViewModel extends _$SavedViewModel {
+class Saved extends _$Saved {
   List<String> build() {
     return [];
   }
 
-  bool tab(ProductItems product) {
-    final id = product.id!;
-    if (state.contains(id)) {
-      state.remove(id);
-      ref.read(productsSavedViewModelProvider.notifier).remove(product);
-      logger.d('$id is Unsaved');
-      return false;
-    } else {
-      state.add(id);
-      ref.read(productsSavedViewModelProvider.notifier).add(product);
-      logger.d('$id is Saved');
-      return true;
-    }
+  void save(String id) {
+    state = [...state, id];
+    logger.d('$id is Saved.');
+  }
+
+  void unsave(String id) {
+    state = [
+      for (final idSaved in state)
+        if (idSaved != id) idSaved,
+    ];
+    logger.d('$id is Unsaved.');
   }
 
   void unSavedAll() {
     state = [];
-    ref.read(productsSavedViewModelProvider.notifier).removeAll();
-    logger.d('Clear product saved');
+    ref.read(productsSavedProvider.notifier).removeAll();
+    logger.d('Clear saved.');
+  }
+
+  bool tab(ProductItems product) {
+    if (state.contains(product.id!)) {
+      ref.read(savedProvider.notifier).unsave(product.id!);
+      ref.read(productsSavedProvider.notifier).remove(product);
+      return false;
+    } else {
+      ref.read(savedProvider.notifier).save(product.id!);
+      ref.read(productsSavedProvider.notifier).add(product);
+      return true;
+    }
   }
 }

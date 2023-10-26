@@ -1,53 +1,55 @@
-class CartModel {
-  Cart? _cart;
+class ProductsSelectedModel {
+  ProductsSelected? _productsSelected;
 
-  CartModel({Cart? cart}) {
-    if (cart != null) {
-      this._cart = cart;
-    }
-  }
-
-  Cart? get cart => _cart;
-  set cart(Cart? cart) => _cart = cart;
-
-  CartModel.fromJson(Map<String, dynamic> json) {
-    _cart = json['cart'] != null ? new Cart.fromJson(json['cart']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this._cart != null) {
-      data['cart'] = this._cart!.toJson();
-    }
-    return data;
-  }
-}
-
-class Cart {
-  double? _totaPrice;
-  List<ProductsSelected>? _productsSelected;
-
-  Cart({double? totaPrice, List<ProductsSelected>? productsSelected}) {
-    if (totaPrice != null) {
-      this._totaPrice = totaPrice;
-    }
+  ProductsSelectedModel({ProductsSelected? productsSelected}) {
     if (productsSelected != null) {
       this._productsSelected = productsSelected;
     }
   }
 
-  double? get totaPrice => _totaPrice;
-  set totaPrice(double? totaPrice) => _totaPrice = totaPrice;
-  List<ProductsSelected>? get productsSelected => _productsSelected;
-  set productsSelected(List<ProductsSelected>? productsSelected) =>
+  ProductsSelected? get productsSelected => _productsSelected;
+  set productsSelected(ProductsSelected? productsSelected) =>
       _productsSelected = productsSelected;
 
-  Cart.fromJson(Map<String, dynamic> json) {
+  ProductsSelectedModel.fromJson(Map<String, dynamic> json) {
+    _productsSelected = json['products_selected'] != null
+        ? new ProductsSelected.fromJson(json['products_selected'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this._productsSelected != null) {
+      data['products_selected'] = this._productsSelected!.toJson();
+    }
+    return data;
+  }
+}
+
+class ProductsSelected {
+  double? _totaPrice;
+  List<Products>? _products;
+
+  ProductsSelected({double? totaPrice, List<Products>? products}) {
+    if (totaPrice != null) {
+      this._totaPrice = totaPrice;
+    }
+    if (products != null) {
+      this._products = products;
+    }
+  }
+
+  double? get totaPrice => _totaPrice;
+  set totaPrice(double? totaPrice) => _totaPrice = totaPrice;
+  List<Products>? get products => _products;
+  set products(List<Products>? products) => _products = products;
+
+  ProductsSelected.fromJson(Map<String, dynamic> json) {
     _totaPrice = json['tota_price'];
-    if (json['products_selected'] != null) {
-      _productsSelected = <ProductsSelected>[];
-      json['products_selected'].forEach((v) {
-        _productsSelected!.add(new ProductsSelected.fromJson(v));
+    if (json['products'] != null) {
+      _products = <Products>[];
+      json['products'].forEach((v) {
+        _products!.add(new Products.fromJson(v));
       });
     }
   }
@@ -55,22 +57,21 @@ class Cart {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['tota_price'] = this._totaPrice;
-    if (this._productsSelected != null) {
-      data['products_selected'] =
-          this._productsSelected!.map((v) => v.toJson()).toList();
+    if (this._products != null) {
+      data['products'] = this._products!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class ProductsSelected {
+class Products {
   String? _id;
   int? _qty;
   double? _totalByItem;
   double? _price;
   String? _name;
 
-  ProductsSelected(
+  Products(
       {String? id,
       int? qty,
       double? totalByItem,
@@ -104,7 +105,7 @@ class ProductsSelected {
   String? get name => _name;
   set name(String? name) => _name = name;
 
-  ProductsSelected.fromJson(Map<String, dynamic> json) {
+  Products.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
     _qty = json['qty'];
     _totalByItem = json['total_by_item'];

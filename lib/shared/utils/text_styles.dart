@@ -74,6 +74,13 @@ class AppTextStyles {
     fontFamily: kodchasan,
   );
 
+  static final normalBoldTextStyle = TextStyle(
+    color: AppColors.black,
+    fontWeight: FontWeight.bold,
+    fontSize: 1.6.h,
+    fontFamily: kodchasan,
+  );
+
   static final normalBoldOrangeTextStyle = TextStyle(
     color: AppColors.orange,
     fontWeight: FontWeight.bold,

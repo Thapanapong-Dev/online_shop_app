@@ -44,7 +44,7 @@ class _BannerElementState extends ConsumerState<BannerElement> {
       );
     }
 
-    return ref.watch(bannersViewModelProvider).when(
+    return ref.watch(bannersProvider).when(
           data: (banners) {
             return Column(
               children: [

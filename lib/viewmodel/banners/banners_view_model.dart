@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'banners_view_model.g.dart';
 
 @Riverpod(keepAlive: true)
-class BannersViewModel extends _$BannersViewModel {
+class Banners extends _$Banners {
   FutureOr<List<BannerItems>> build() async {
     final data = json.decode(
       await rootBundle.loadString('assets/mock/banners.json'),

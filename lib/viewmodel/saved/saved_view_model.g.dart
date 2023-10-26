@@ -6,21 +6,19 @@ part of 'saved_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$savedViewModelHash() => r'4f4e9c172081d9e2f68b47c1ca9c1c4191330a93';
+String _$savedHash() => r'0d0071546860e52e80ba5ad4af3bfdc8114b348f';
 
-/// See also [SavedViewModel].
-@ProviderFor(SavedViewModel)
-final savedViewModelProvider =
-    NotifierProvider<SavedViewModel, List<String>>.internal(
-  SavedViewModel.new,
-  name: r'savedViewModelProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$savedViewModelHash,
+/// See also [Saved].
+@ProviderFor(Saved)
+final savedProvider = NotifierProvider<Saved, List<String>>.internal(
+  Saved.new,
+  name: r'savedProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$savedHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$SavedViewModel = Notifier<List<String>>;
+typedef _$Saved = Notifier<List<String>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

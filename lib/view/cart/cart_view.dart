@@ -11,25 +11,19 @@ import 'package:online_shop_app/shared/widgets/invalid_widget.dart';
 import 'package:online_shop_app/shared/widgets/loading_widget.dart';
 import 'package:online_shop_app/shared/widgets/product_quantity_widget.dart';
 import 'package:online_shop_app/view/product/product_view.dart';
-import 'package:online_shop_app/viewmodel/cart/cart_view_model.dart';
+import 'package:online_shop_app/viewmodel/cart/product_selected_view_model.dart';
 import 'package:online_shop_app/viewmodel/cart/products_cart_view_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class CartView extends ConsumerStatefulWidget {
+class CartView extends ConsumerWidget {
   const CartView({super.key});
 
   @override
-  ConsumerState<CartView> createState() => _SavedViewState();
-}
-
-class _SavedViewState extends ConsumerState<CartView> {
-  @override
-  Widget build(BuildContext context) {
-    final _products = ref.watch(productsCartViewModelProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _productsCart = ref.watch(productsCartProvider);
+    final _productSelected = ref.watch(productSelectedProvider);
 
     Widget _buildChekout() {
-      final totalPrice =
-          ref.watch(cartViewModelProvider.notifier).getTotalPrice();
       return Container(
         height: 7.h,
         color: AppColors.lightOrange,
@@ -38,7 +32,7 @@ class _SavedViewState extends ConsumerState<CartView> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Total: ${Utils().priceFormatWithSymbol(totalPrice)}',
+              'Total: ${_productSelected.totaPrice}',
               style: AppTextStyles.largeBoldTextStyle,
             ),
             ElevatedButton(
@@ -60,7 +54,7 @@ class _SavedViewState extends ConsumerState<CartView> {
       );
     }
 
-    Widget _buildPlus(ProductItems product, int quantity) {
+    Widget _buildPlus(ProductItems product) {
       return Container(
         margin: EdgeInsets.only(left: 4),
         child: SizedBox.fromSize(
@@ -70,12 +64,9 @@ class _SavedViewState extends ConsumerState<CartView> {
               color: AppColors.lightOrange,
               child: InkWell(
                 splashColor: AppColors.orange,
-                onTap: () {
-                  ref
-                      .read(cartViewModelProvider.notifier)
-                      .update(product: product, quantity: quantity + 1);
-                  setState(() {});
-                },
+                onTap: () => ref
+                    .read(productSelectedProvider.notifier)
+                    .update(product: product, quantity: 1),
                 child: Icon(Icons.add),
               ),
             ),
@@ -84,7 +75,7 @@ class _SavedViewState extends ConsumerState<CartView> {
       );
     }
 
-    Widget _buildMinus(ProductItems product, int quantity) {
+    Widget _buildMinus(ProductItems product) {
       return Container(
         margin: EdgeInsets.only(left: 4),
         child: SizedBox.fromSize(
@@ -94,12 +85,9 @@ class _SavedViewState extends ConsumerState<CartView> {
               color: AppColors.lightGrey,
               child: InkWell(
                 splashColor: AppColors.orange,
-                onTap: () {
-                  ref
-                      .read(cartViewModelProvider.notifier)
-                      .update(product: product, quantity: quantity - 1);
-                  setState(() {});
-                },
+                onTap: () => ref
+                    .read(productSelectedProvider.notifier)
+                    .update(product: product, quantity: -1),
                 child: Icon(Icons.remove),
               ),
             ),
@@ -108,13 +96,14 @@ class _SavedViewState extends ConsumerState<CartView> {
       );
     }
 
-    Widget _buildQuantityOperation(
-        {required ProductItems product, required int quantity}) {
+    Widget _buildQuantityOperation({required ProductItems product}) {
+      final quantity =
+          ref.watch(productSelectedProvider.notifier).getQuantity(product.id!);
       return Row(
         children: [
-          quantity == 0 ? SizedBox() : _buildMinus(product, quantity),
+          quantity == 0 ? SizedBox() : _buildMinus(product),
           ProductQuantity(quantity: quantity),
-          _buildPlus(product, quantity),
+          _buildPlus(product),
         ],
       );
     }
@@ -146,7 +135,7 @@ class _SavedViewState extends ConsumerState<CartView> {
                     context,
                     Routes.PRODUCT,
                     arguments: ProductArguments(product),
-                  ).then((_) => setState(() {}));
+                  );
                 },
                 child: CachedNetworkImage(
                   imageUrl: product.imageUrl!,
@@ -194,19 +183,16 @@ class _SavedViewState extends ConsumerState<CartView> {
     return Scaffold(
       body: SafeArea(
         bottom: false,
-        child: _products.isNotEmpty
+        child: _productsCart.isNotEmpty
             ? SingleChildScrollView(
                 child: Column(
                   children: [
                     ListView.builder(
                       shrinkWrap: true,
-                      itemCount: _products.length,
+                      itemCount: _productsCart.length,
                       physics: BouncingScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
-                        final product = _products[index];
-                        final quantity = ref
-                            .watch(cartViewModelProvider.notifier)
-                            .getProductQuantity(product.id!);
+                        final product = _productsCart[index];
                         return Container(
                           margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                           child: Slidable(
@@ -218,7 +204,6 @@ class _SavedViewState extends ConsumerState<CartView> {
                                   bottom: 10,
                                   child: _buildQuantityOperation(
                                     product: product,
-                                    quantity: quantity,
                                   ),
                                 )
                               ],
@@ -230,13 +215,10 @@ class _SavedViewState extends ConsumerState<CartView> {
                                 SlidableAction(
                                   onPressed: (context) {
                                     ref
-                                        .read(cartViewModelProvider.notifier)
-                                        .update(
-                                          product: _products[index],
-                                          quantity: 0,
-                                          isRemoveProductFromCart: true,
-                                        );
-                                    setState(() {});
+                                        .read(productSelectedProvider.notifier)
+                                        .removeProductSelectedAndProductInCart(
+                                            product: product);
+                                    ;
                                   },
                                   icon: Icons.delete,
                                   foregroundColor: AppColors.white,
@@ -275,9 +257,7 @@ class _SavedViewState extends ConsumerState<CartView> {
               ),
       ),
       bottomNavigationBar:
-          ref.watch(cartViewModelProvider).productsSelected!.isEmpty
-              ? SizedBox()
-              : _buildChekout(),
+          _productSelected.totaPrice == 0 ? SizedBox() : _buildChekout(),
     );
   }
 }

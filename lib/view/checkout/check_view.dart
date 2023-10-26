@@ -4,7 +4,7 @@ import 'package:online_shop_app/routers.dart';
 import 'package:online_shop_app/shared/utils/colors.dart';
 import 'package:online_shop_app/shared/utils/text_styles.dart';
 import 'package:online_shop_app/shared/utils/utils.dart';
-import 'package:online_shop_app/viewmodel/cart/cart_view_model.dart';
+import 'package:online_shop_app/viewmodel/cart/product_selected_view_model.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -13,8 +13,7 @@ class CheckoutView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final _cart = ref.watch(cartViewModelProvider);
-    final _totalPrice = ref.watch(cartViewModelProvider.notifier).getTotalPrice();
+    final _productSelected = ref.watch(productSelectedProvider);
 
     Widget _buildProductSummary() {
       return Scrollbar(
@@ -29,40 +28,45 @@ class CheckoutView extends ConsumerWidget {
           ),
           child: ListView.builder(
             shrinkWrap: true,
-            itemCount: _cart.productsSelected!.length,
+            itemCount: _productSelected.products!.length,
             physics: BouncingScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
-              final product = _cart.productsSelected![index];
-              return Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 45.w,
-                            child: Text(
-                              product.name!,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: false,
-                              style: AppTextStyles.mediumTextStyle,
+              final product = _productSelected.products![index];
+              return Container(
+                margin: EdgeInsets.only(top: 2),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 60.w,
+                              child: Text(
+                                product.name!,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: false,
+                                style: AppTextStyles.normalTextStyle,
+                              ),
                             ),
-                          ),
-                          Text(
-                            '${product.qty}x${Utils().priceFormat(product.price)}',
-                            style: AppTextStyles.mediumTextStyle,
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      ),
-                      Text(
-                        '${Utils().priceFormatWithSymbol(product.totalByItem)}',
-                        style: AppTextStyles.mediumBoldTextStyle,
-                      ),
-                    ],
-                  ),
-                ],
+                            Text(
+                              '${product.qty}x${Utils().priceFormat(product.price)}',
+                              style: AppTextStyles.normalTextStyle,
+                              textAlign: TextAlign.left,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Text(
+                      '${Utils().priceFormatWithSymbol(product.totalByItem)}',
+                      style: AppTextStyles.normalBoldTextStyle,
+                    ),
+                  ],
+                ),
               );
             },
           ),
@@ -81,7 +85,7 @@ class CheckoutView extends ConsumerWidget {
               style: AppTextStyles.largeBoldTextStyle,
             ),
             Text(
-              '${Utils().priceFormatWithSymbol(_totalPrice)}',
+              '${Utils().priceFormatWithSymbol(_productSelected.totaPrice)}',
               style: AppTextStyles.largeBoldTextStyle,
             ),
           ],
@@ -91,7 +95,8 @@ class CheckoutView extends ConsumerWidget {
 
     Widget _buildQRCode() {
       return QrImageView(
-        data: 'https://payment-api.yimplatform.com/checkout?price=${_totalPrice}',
+        data:
+            'https://payment-api.yimplatform.com/checkout?price=${_productSelected.totaPrice}',
         version: QrVersions.auto,
         size: 60.w,
         eyeStyle: QrEyeStyle(
@@ -129,7 +134,7 @@ class CheckoutView extends ConsumerWidget {
     return WillPopScope(
       onWillPop: () async {
         Navigator.pushNamed(context, Routes.INITIAL);
-        ref.read(cartViewModelProvider.notifier).removeAll();
+        ref.read(productSelectedProvider.notifier).removeAll();
         return true;
       },
       child: Scaffold(

@@ -12,23 +12,18 @@ import 'package:online_shop_app/shared/widgets/loading_widget.dart';
 import 'package:online_shop_app/shared/widgets/notification_widget.dart';
 import 'package:online_shop_app/shared/widgets/product_quantity_widget.dart';
 import 'package:online_shop_app/view/product/product_view.dart';
-import 'package:online_shop_app/viewmodel/cart/cart_view_model.dart';
+import 'package:online_shop_app/viewmodel/cart/product_selected_view_model.dart';
 import 'package:online_shop_app/viewmodel/saved/products_saved_view_model.dart';
 import 'package:online_shop_app/viewmodel/saved/saved_view_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class SavedView extends ConsumerStatefulWidget {
+class SavedView extends ConsumerWidget {
   const SavedView({super.key});
 
   @override
-  ConsumerState<SavedView> createState() => _SavedViewState();
-}
-
-class _SavedViewState extends ConsumerState<SavedView> {
-  List<ProductItems> _products = [];
-  @override
-  Widget build(BuildContext context) {
-    _products = ref.watch(productsSavedViewModelProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _products = ref.watch(productsSavedProvider);
+    ref.watch(productSelectedProvider);
 
     Widget _buildRemoveAll() {
       return Container(
@@ -36,8 +31,7 @@ class _SavedViewState extends ConsumerState<SavedView> {
         alignment: AlignmentDirectional.centerEnd,
         child: TextButton(
           onPressed: () {
-            setState(() {});
-            ref.read(savedViewModelProvider.notifier).unSavedAll();
+            ref.read(savedProvider.notifier).unSavedAll();
             AppNotification().savedNotification(
               name: 'All product',
               isSaved: false,
@@ -82,7 +76,7 @@ class _SavedViewState extends ConsumerState<SavedView> {
                     context,
                     Routes.PRODUCT,
                     arguments: ProductArguments(product),
-                  ).then((_) => setState(() {}));
+                  );
                 },
                 child: CachedNetworkImage(
                   imageUrl: product.imageUrl!,
@@ -142,8 +136,8 @@ class _SavedViewState extends ConsumerState<SavedView> {
                     itemBuilder: (BuildContext context, int index) {
                       final product = _products[index];
                       final quantity = ref
-                          .watch(cartViewModelProvider.notifier)
-                          .getProductQuantity(product.id!);
+                          .watch(productSelectedProvider.notifier)
+                          .getQuantity(product.id!);
                       return Container(
                         margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                         child: Slidable(
@@ -163,9 +157,8 @@ class _SavedViewState extends ConsumerState<SavedView> {
                             children: [
                               SlidableAction(
                                 onPressed: (context) {
-                                  setState(() {});
                                   final isSaved = ref
-                                      .read(savedViewModelProvider.notifier)
+                                      .read(savedProvider.notifier)
                                       .tab(_products[index]);
                                   AppNotification().savedNotification(
                                     name: product.name!,

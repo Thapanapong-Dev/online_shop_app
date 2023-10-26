@@ -38,3 +38,5 @@ flutter:
   assets:
     - assets/mock/banners.json
     - assets/mock/products.json
+    - assets/mock/my_banners.json
+    - assets/mock/my_products.json

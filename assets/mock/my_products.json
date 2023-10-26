@@ -3,7 +3,7 @@
         {
             "id": "1", 
             "name": "JAZZ Apple Size M Pack 6.",
-            "price": 89 ,
+            "price": 1000000 ,
             "image_url": "https://www.foodservices.bigc.co.th/media/catalog/product/cache/f1cc4967ed170b05b7bb6d8a6b95e3f5/2/0/2000007330962_1_1.jpg?auto=webp&format=pjpg&width=320&height=400&fit=cover"
         },
         {
@@ -21,19 +21,19 @@
         {
             "id": "4", 
             "name": "Cavendish & Harvey Apple Drops (2 x 200g.)",
-            "price": 604.81 ,
+            "price": 604 ,
             "image_url": "https://i5.walmartimages.com/asr/18d71bcb-489f-4331-9358-07a4d970929e.24b92cc06d785739fd0a0f5b7245d0c1.jpeg?odnHeight=2000&odnWidth=2000&odnBg=FFFFFF"
         },
         {
             "id": "5", 
             "name": "Argentina 100GF Angus Beef Striploin 180 to 200g.",
-            "price": 300.09 ,
+            "price": 300 ,
             "image_url": "https://backend.tops.co.th/media/catalog/product/0/0/0000048566117.jpg"
         },
         {
             "id": "6", 
             "name": "Argentina 100 Days Grain Fed Angus Beef Tenderloin",
-            "price": 2420 ,
+            "price": 1000000 ,
             "image_url": "https://backend.tops.co.th/media/catalog/product/0/2/0210920000008.jpg"
         },
         {

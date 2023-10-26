@@ -8,7 +8,7 @@ import 'package:online_shop_app/shared/utils/utils.dart';
 import 'package:online_shop_app/shared/widgets/invalid_widget.dart';
 import 'package:online_shop_app/shared/widgets/loading_widget.dart';
 import 'package:online_shop_app/shared/widgets/notification_widget.dart';
-import 'package:online_shop_app/viewmodel/cart/cart_view_model.dart';
+import 'package:online_shop_app/viewmodel/cart/product_selected_view_model.dart';
 import 'package:online_shop_app/viewmodel/saved/saved_view_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -17,16 +17,11 @@ class ProductArguments {
   final ProductItems product;
 }
 
-class ProductView extends ConsumerStatefulWidget {
+class ProductView extends ConsumerWidget {
   const ProductView({super.key});
 
   @override
-  ConsumerState<ProductView> createState() => _ProductViewState();
-}
-
-class _ProductViewState extends ConsumerState<ProductView> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final _args =
         ModalRoute.of(context)!.settings.arguments as ProductArguments;
 
@@ -64,9 +59,7 @@ class _ProductViewState extends ConsumerState<ProductView> {
     Widget _buildSavedIcon() {
       return GestureDetector(
         onTap: () {
-          setState(() {});
-          final isSaved =
-              ref.read(savedViewModelProvider.notifier).tab(_args.product);
+          final isSaved = ref.read(savedProvider.notifier).tab(_args.product);
           AppNotification().savedNotification(
             name: _args.product.name!,
             isSaved: isSaved,
@@ -81,7 +74,7 @@ class _ProductViewState extends ConsumerState<ProductView> {
             color: AppColors.orange,
             shape: BoxShape.circle,
           ),
-          child: ref.watch(savedViewModelProvider).contains(_args.product.id)
+          child: ref.watch(savedProvider).contains(_args.product.id)
               ? Icon(
                   Icons.favorite_rounded,
                   color: AppColors.red,
@@ -141,15 +134,15 @@ class _ProductViewState extends ConsumerState<ProductView> {
         child: ElevatedButton(
           child: Text('Add to Cart'),
           onPressed: () {
+            ref
+                .read(productSelectedProvider.notifier)
+                .update(product: _args.product, quantity: 1);
             final current_quantity = ref
-                .read(cartViewModelProvider.notifier)
-                .getProductQuantity(_args.product.id!);
-            final updated_quantity = ref
-                .read(cartViewModelProvider.notifier)
-                .update(product: _args.product, quantity: current_quantity + 1);
+                .read(productSelectedProvider.notifier)
+                .getQuantity(_args.product.id!);
             AppNotification().addToCartNotification(
               name: _args.product.name!,
-              quantity: updated_quantity,
+              quantity: current_quantity,
               context: context,
             );
           },
