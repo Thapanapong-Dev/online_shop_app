@@ -16,7 +16,7 @@ final appTheme = ThemeData(
   scaffoldBackgroundColor: AppColors.lighterGrey,
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
-      backgroundColor: AppColors.transparent,
+      backgroundColor: AppColors.lighterGrey,
       shadowColor: AppColors.transparent,
       elevation: 0.5,
       foregroundColor: AppColors.orange,

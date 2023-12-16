@@ -8,7 +8,7 @@ part 'products_view_model.g.dart';
 class Products extends _$Products {
   FutureOr<List<ProductItems>> build() async {
     final data = json.decode(
-      await rootBundle.loadString('assets/mock/products.json'),
+      await rootBundle.loadString('assets/mock/my_products.json'),
     ) as Map<String, Object?>;
     return ProductsModel.fromJson(data).productItems!;
   }

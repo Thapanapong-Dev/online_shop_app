@@ -22,13 +22,13 @@ class MyApp extends StatelessWidget {
       child: ResponsiveSizer(
         builder: (context, orientation, screenTyp) {
           return MaterialApp(
-            builder: (context, Widget? child) {
-              final MediaQueryData data = MediaQuery.of(context);
-              return MediaQuery(
-                data: data.copyWith(textScaleFactor: 1),
-                child: child!,
-              );
-            },
+            // builder: (context, Widget? child) {
+            //   final MediaQueryData data = MediaQuery.of(context);
+            //   return MediaQuery(
+            //     data: data.copyWith(textScaleFactor: 1),
+            //     child: child!,
+            //   );
+            // },
             title: 'Flutter Demo',
             theme: appTheme,
             debugShowCheckedModeBanner: false,

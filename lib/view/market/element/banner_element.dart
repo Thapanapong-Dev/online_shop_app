@@ -37,7 +37,7 @@ class _BannerElementState extends ConsumerState<BannerElement> {
                   LoadingWidget().LoadingElement(size: 8.h, lineWidth: 5),
               errorWidget: (context, url, error) =>
                   InvalidWidget().imageNotFound(height: 6.h, fontSize: 14),
-              fit: BoxFit.contain,
+              fit: BoxFit.fill,
             ),
           ),
         ),
@@ -46,7 +46,8 @@ class _BannerElementState extends ConsumerState<BannerElement> {
 
     return ref.watch(bannersProvider).when(
           data: (banners) {
-            return Column(
+            return Stack(
+              alignment: AlignmentDirectional.bottomCenter,
               children: [
                 CarouselSlider(
                   options: CarouselOptions(
@@ -62,15 +63,31 @@ class _BannerElementState extends ConsumerState<BannerElement> {
                   ),
                   items: _buildBanners(banners),
                 ),
-                SizedBox(height: 4),
-                AnimatedSmoothIndicator(
-                  activeIndex: _current_index,
-                  count: banners.length,
-                  effect: ExpandingDotsEffect(
-                    dotColor: AppColors.grey,
-                    activeDotColor: AppColors.orange,
-                    dotHeight: 8,
-                    dotWidth: 8,
+                Container(
+                  margin: EdgeInsets.only(bottom: 1.h),
+                  child: AnimatedSmoothIndicator(
+                    activeIndex: _current_index,
+                    count: banners.length,
+                    effect: CustomizableEffect(
+                      dotDecoration: DotDecoration(
+                        color: AppColors.white,
+                        dotBorder: DotBorder(
+                          color: AppColors.black,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                        width: 1.2.h,
+                        height: 1.2.h,
+                      ),
+                      activeDotDecoration: DotDecoration(
+                        color: AppColors.orange,
+                        dotBorder: DotBorder(
+                          color: AppColors.black,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                        width: 5.h,
+                        height: 1.2.h,
+                      ),
+                    ),
                   ),
                 ),
               ],

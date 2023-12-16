@@ -8,7 +8,7 @@ part 'banners_view_model.g.dart';
 class Banners extends _$Banners {
   FutureOr<List<BannerItems>> build() async {
     final data = json.decode(
-      await rootBundle.loadString('assets/mock/banners.json'),
+      await rootBundle.loadString('assets/mock/my_banners.json'),
     ) as Map<String, Object?>;
     return BannersModel.fromJson(data).bannerItems!;
   }
