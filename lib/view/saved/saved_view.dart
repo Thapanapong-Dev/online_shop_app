@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:online_shop_app/model/products.model.dart';
 import 'package:online_shop_app/routers.dart';
 import 'package:online_shop_app/shared/utils/colors.dart';
+import 'package:online_shop_app/shared/utils/properties.dart';
 import 'package:online_shop_app/shared/utils/text_styles.dart';
 import 'package:online_shop_app/shared/utils/utils.dart';
 import 'package:online_shop_app/shared/widgets/invalid_widget.dart';
@@ -53,17 +54,7 @@ class SavedView extends ConsumerWidget {
       return Container(
         padding: EdgeInsets.all(5),
         margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: AppColors.white,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.grey,
-              blurRadius: 5,
-              offset: Offset(1, 1),
-            )
-          ],
-        ),
+        decoration: Properties().cardDecoration(),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -10,14 +10,14 @@ class ProductSelected extends _$ProductSelected {
   ProductsSelected build() {
     return ProductsSelected(
       products: [],
-      totaPrice: 0,
+      totalPrice: 0,
     );
   }
 
   void add(Products product) {
     state = ProductsSelected(
       products: [...state.products!, product],
-      totaPrice: state.totaPrice,
+      totalPrice: state.totalPrice,
     );
     logger.d('${product.id} selected product.');
   }
@@ -28,7 +28,7 @@ class ProductSelected extends _$ProductSelected {
         for (final productsSelected in state.products!)
           if (productsSelected != product) productsSelected,
       ],
-      totaPrice: state.totaPrice,
+      totalPrice: state.totalPrice,
     );
     ref.read(productSelectedProvider.notifier).updateTotalPrice();
     logger.d('${product.id} remove product selected.');
@@ -37,7 +37,7 @@ class ProductSelected extends _$ProductSelected {
   void removeAll() {
     state = ProductsSelected(
       products: [],
-      totaPrice: 0,
+      totalPrice: 0,
     );
     logger.d('Clear all product selected.');
   }
@@ -49,7 +49,7 @@ class ProductSelected extends _$ProductSelected {
     }
     state = ProductsSelected(
       products: state.products,
-      totaPrice: totalPrice,
+      totalPrice: totalPrice,
     );
   }
 
@@ -99,7 +99,7 @@ class ProductSelected extends _$ProductSelected {
         newProduct![newProduct.indexOf(_productTarget)] = _product;
         state = ProductsSelected(
           products: newProduct,
-          totaPrice: state.totaPrice,
+          totalPrice: state.totalPrice,
         );
       }
       logger.d('${product.id} update(plus or minus) quantity to cart');

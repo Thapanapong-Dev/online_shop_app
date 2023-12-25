@@ -27,25 +27,25 @@ class ProductsSelectedModel {
 }
 
 class ProductsSelected {
-  double? _totaPrice;
+  double? _totalPrice;
   List<Products>? _products;
 
-  ProductsSelected({double? totaPrice, List<Products>? products}) {
-    if (totaPrice != null) {
-      this._totaPrice = totaPrice;
+  ProductsSelected({double? totalPrice, List<Products>? products}) {
+    if (totalPrice != null) {
+      this._totalPrice = totalPrice;
     }
     if (products != null) {
       this._products = products;
     }
   }
 
-  double? get totaPrice => _totaPrice;
-  set totaPrice(double? totaPrice) => _totaPrice = totaPrice;
+  double? get totalPrice => _totalPrice;
+  set totalPrice(double? totalPrice) => _totalPrice = totalPrice;
   List<Products>? get products => _products;
   set products(List<Products>? products) => _products = products;
 
   ProductsSelected.fromJson(Map<String, dynamic> json) {
-    _totaPrice = json['tota_price'];
+    _totalPrice = json['total_price'];
     if (json['products'] != null) {
       _products = <Products>[];
       json['products'].forEach((v) {
@@ -56,7 +56,7 @@ class ProductsSelected {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['tota_price'] = this._totaPrice;
+    data['total_price'] = this._totalPrice;
     if (this._products != null) {
       data['products'] = this._products!.map((v) => v.toJson()).toList();
     }

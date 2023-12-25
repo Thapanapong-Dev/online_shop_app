@@ -3,10 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 import 'package:online_shop_app/routers.dart';
 import 'package:online_shop_app/shared/utils/theme.dart';
-import 'package:online_shop_app/view/checkout/check_view.dart';
+import 'package:online_shop_app/view/checkout/checkout_view.dart';
+import 'package:online_shop_app/view/payment/payment_view.dart';
 import 'package:online_shop_app/view/home/home_view.dart';
 import 'package:online_shop_app/view/product/product_view.dart';
 import 'package:online_shop_app/view/recommend/recommend_view.dart';
+import 'package:online_shop_app/view/checkout/widget/tax_invoice_view.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 void main() {
@@ -37,7 +39,9 @@ class MyApp extends StatelessWidget {
               Routes.INITIAL: (context) => const HomeView(),
               Routes.RECOMMEND: (context) => const RecommendView(),
               Routes.PRODUCT: (context) => ProductView(),
+              Routes.PAYMENT: (context) => PaymentView(),
               Routes.CHECKOUT: (context) => CheckoutView(),
+              Routes.TAX_INVOICE: (context) => TaxInvoiceView(),
             },
           );
         },
