@@ -8,8 +8,8 @@ import 'package:online_shop_app/viewmodel/cart/product_selected_view_model.dart'
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class CheckoutView extends ConsumerWidget {
-  const CheckoutView({super.key});
+class PaymentView extends ConsumerWidget {
+  const PaymentView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -85,7 +85,7 @@ class CheckoutView extends ConsumerWidget {
               style: AppTextStyles.largeBoldTextStyle,
             ),
             Text(
-              '${Utils().priceFormatWithSymbol(_productSelected.totaPrice)}',
+              '${Utils().priceFormatWithSymbol(_productSelected.totalPrice)}',
               style: AppTextStyles.largeBoldTextStyle,
             ),
           ],
@@ -96,7 +96,7 @@ class CheckoutView extends ConsumerWidget {
     Widget _buildQRCode() {
       return QrImageView(
         data:
-            'https://payment-api.yimplatform.com/checkout?price=${_productSelected.totaPrice}',
+            'https://payment-api.yimplatform.com/checkout?price=${_productSelected.totalPrice}',
         version: QrVersions.auto,
         size: 60.w,
         eyeStyle: QrEyeStyle(
