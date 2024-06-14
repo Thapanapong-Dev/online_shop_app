@@ -23,7 +23,7 @@ class CartView extends ConsumerWidget {
     final _productsCart = ref.watch(productsCartProvider);
     final _productSelected = ref.watch(productSelectedProvider);
 
-    Widget _buildChekout() {
+    Widget _buildCheckout() {
       return Container(
         height: 7.h,
         color: AppColors.lightOrange,
@@ -32,7 +32,7 @@ class CartView extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Total: ${_productSelected.totaPrice}',
+              'Total: ${_productSelected.totalPrice}',
               style: AppTextStyles.largeBoldTextStyle,
             ),
             ElevatedButton(
@@ -257,7 +257,7 @@ class CartView extends ConsumerWidget {
               ),
       ),
       bottomNavigationBar:
-          _productSelected.totaPrice == 0 ? SizedBox() : _buildChekout(),
+          _productSelected.totalPrice == 0 ? SizedBox() : _buildCheckout(),
     );
   }
 }

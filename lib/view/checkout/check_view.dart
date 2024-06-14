@@ -85,7 +85,7 @@ class CheckoutView extends ConsumerWidget {
               style: AppTextStyles.largeBoldTextStyle,
             ),
             Text(
-              '${Utils().priceFormatWithSymbol(_productSelected.totaPrice)}',
+              '${Utils().priceFormatWithSymbol(_productSelected.totalPrice)}',
               style: AppTextStyles.largeBoldTextStyle,
             ),
           ],
@@ -96,7 +96,7 @@ class CheckoutView extends ConsumerWidget {
     Widget _buildQRCode() {
       return QrImageView(
         data:
-            'https://payment-api.yimplatform.com/checkout?price=${_productSelected.totaPrice}',
+            'https://payment-api.yimplatform.com/checkout?price=${_productSelected.totalPrice}',
         version: QrVersions.auto,
         size: 60.w,
         eyeStyle: QrEyeStyle(
@@ -131,11 +131,10 @@ class CheckoutView extends ConsumerWidget {
       );
     }
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (_) async {
         Navigator.pushNamed(context, Routes.INITIAL);
         ref.read(productSelectedProvider.notifier).removeAll();
-        return true;
       },
       child: Scaffold(
         appBar: AppBar(

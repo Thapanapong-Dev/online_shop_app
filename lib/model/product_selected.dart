@@ -39,8 +39,8 @@ class ProductsSelected {
     }
   }
 
-  double? get totaPrice => _totaPrice;
-  set totaPrice(double? totaPrice) => _totaPrice = totaPrice;
+  double? get totalPrice => _totaPrice;
+  set totalPrice(double? totaPrice) => _totaPrice = totaPrice;
   List<Products>? get products => _products;
   set products(List<Products>? products) => _products = products;
 

@@ -17,7 +17,7 @@ class ProductSelected extends _$ProductSelected {
   void add(Products product) {
     state = ProductsSelected(
       products: [...state.products!, product],
-      totaPrice: state.totaPrice,
+      totaPrice: state.totalPrice,
     );
     logger.d('${product.id} selected product.');
   }
@@ -28,7 +28,7 @@ class ProductSelected extends _$ProductSelected {
         for (final productsSelected in state.products!)
           if (productsSelected != product) productsSelected,
       ],
-      totaPrice: state.totaPrice,
+      totaPrice: state.totalPrice,
     );
     ref.read(productSelectedProvider.notifier).updateTotalPrice();
     logger.d('${product.id} remove product selected.');
@@ -99,7 +99,7 @@ class ProductSelected extends _$ProductSelected {
         newProduct![newProduct.indexOf(_productTarget)] = _product;
         state = ProductsSelected(
           products: newProduct,
-          totaPrice: state.totaPrice,
+          totaPrice: state.totalPrice,
         );
       }
       logger.d('${product.id} update(plus or minus) quantity to cart');
